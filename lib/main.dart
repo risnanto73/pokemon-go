@@ -32,8 +32,12 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: DetailPage(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/home-page' : (context) => HomePage(), // route name
+        '/detail-page' : (context) => DetailPage(),
+      },
     );
   }
 }
