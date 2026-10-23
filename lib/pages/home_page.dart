@@ -30,12 +30,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _openDetail(pokemon, bool isFavorite) async {
+  Future<void> _openDetail(Pokemon pokemon, bool isFavorite) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            DetailPage(pokemon: pokemon, type: "", isFavorite: isFavorite),
+        builder: (_) => DetailPage(
+          pokemon: pokemon,
+          type: pokemon.type,
+          isFavorite: isFavorite,
+        ),
       ),
     );
     // ! + =
@@ -108,7 +111,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Switch(value: isSwitch, onChanged: (value) {}),
+                Switch(
+                  value: _showFavoriteOnly,
+                  onChanged: (value) {
+                    setState(() {
+                      _showFavoriteOnly = value;
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -118,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                 //425 Mobile
                 //768 Tablet
                 //1024 Desktop
-                if (constraints.maxWidth <= 425) {
+                if (constraints.maxWidth <= 504) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       final pokemon = filtered[index];
@@ -134,21 +144,24 @@ class _HomePageState extends State<HomePage> {
                         onFavoriteTap: () {
                           _toggleFavorite(pokemon.name);
                         },
+                        type: pokemon.type,
                       );
                     },
                     itemCount: filtered.length,
                   );
                 } else {
                   int column = 2;
-                  if (constraints.maxWidth > 768 && constraints.maxWidth < 1024)
+                  if (constraints.maxWidth >= 768 &&
+                      constraints.maxWidth < 1024) {
                     column = 3;
+                  }
                   if (constraints.maxWidth >= 1024) column = 4;
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: column,
                       crossAxisSpacing: 12,
-                      childAspectRatio: 3 / 4,
                       mainAxisSpacing: 12,
+                      childAspectRatio: 3 / 4,
                     ),
                     itemBuilder: (context, index) {
                       final pokemon = filtered[index];
